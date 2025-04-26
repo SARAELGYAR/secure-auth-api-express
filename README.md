@@ -1,74 +1,195 @@
-Express Authentication & RBAC System
-A secure Express.js API implementation with JWT authentication and role-based access control.
 
-Features
-User registration and login
-Password hashing using bcrypt
-JWT-based authentication
-Role-based access control (user, moderator, admin)
-Protected and public routes
-Basic user management features
-Security enhancements (rate limiting, secure password storage)
-Getting Started
-Prerequisites
-Node.js (v14 or higher)
-npm (v6 or higher)
-Installation
-Clone the repository:
 
-git clone <repository-url>
-Install dependencies:
+# Express Authentication & RBAC System
 
-npm install
-Create a .env file in the root directory with the following variables:
+A secure Express.js API implementation featuring JWT authentication, password hashing, and role-based access control (`user`, `moderator`, `admin`).
 
-PORT=3000
-JWT_SECRET=your_super_secure_jwt_secret_key_change_in_production
-JWT_EXPIRES_IN=3600
-Start the server:
+---
 
-npm start
-API Endpoints
-Authentication
-POST /api/register - Register a new user
+## ✨ Features
 
-Body: { "username": "user1", "email": "user@example.com", "password": "Password1!", "role": "user" }
-POST /api/login - Login with username and password
+- User Registration and Login
+- Password Hashing with bcrypt
+- JWT-Based Authentication
+- Role-Based Access Control (RBAC)
+- Public and Protected Routes
+- Basic User Management (Profile and Role Updates)
+- Security Enhancements:
+  - Rate Limiting
+  - Secure Password Storage
+  - JWT Token Expiration
+  - Secure Error Handling
 
-Body: { "username": "user1", "password": "Password1!" }
-Public Routes
-GET /api/public - Public route accessible by everyone
-Protected Routes
-GET /api/protected - Protected route (requires authentication)
-GET /api/moderator - Moderator route (requires moderator or admin role)
-GET /api/admin - Admin route (requires admin role)
-User Profile
-GET /api/profile - Get user profile (requires authentication)
-PUT /api/profile - Update user profile (requires authentication)
-Body: { "email": "new.email@example.com", "password": "NewPassword1!" }
-User Management
-PUT /api/users/:id/role - Update user role (requires admin role)
-Body: { "role": "moderator" }
-Security Features
-Password hashing using bcrypt
-JWT token with expiration
-Role-based access control
-Rate limiting for login and registration
-Secure error handling
-Email and password validation
-Testing the API
-You can test the API using tools like Postman or cURL.
+---
 
-Example cURL Commands
-Register a new user:
+## 🚀 Getting Started
 
-curl -X POST http://localhost:3000/api/register -H "Content-Type: application/json" -d '{"username":"admin1","email":"admin@example.com","password":"Password1!","role":"admin"}'
-Login:
+### Prerequisites
 
-curl -X POST http://localhost:3000/api/login -H "Content-Type: application/json" -d '{"username":"admin1","password":"Password1!"}'
-Access protected route (replace TOKEN with your JWT token):
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- [npm](https://www.npmjs.com/) (v6 or higher)
 
-curl -X GET http://localhost:3000/api/protected -H "Authorization: Bearer TOKEN"
-Update user role (replace TOKEN with admin JWT token and USER_ID with target user ID):
+### Installation
 
-curl -X PUT http://localhost:3000/api/users/USER_ID/role -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json" -d '{"role":"moderator"}'
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Variables**
+
+   Create a `.env` file in the root directory and add:
+
+   ```plaintext
+   PORT=3000
+   JWT_SECRET=your_super_secure_jwt_secret_key_change_in_production
+   JWT_EXPIRES_IN=3600
+   ```
+
+4. **Run the server**
+   ```bash
+   npm start
+   ```
+
+---
+
+## 📋 API Endpoints
+
+### Authentication
+
+- **POST** `/api/register` — Register a new user  
+  **Body**:
+  ```json
+  {
+    "username": "user1",
+    "email": "user@example.com",
+    "password": "Password1!",
+    "role": "user"
+  }
+  ```
+
+- **POST** `/api/login` — Login with username and password  
+  **Body**:
+  ```json
+  {
+    "username": "user1",
+    "password": "Password1!"
+  }
+  ```
+
+---
+
+### Public Routes
+
+- **GET** `/api/public` — Public route accessible by everyone
+
+---
+
+### Protected Routes (Require Authentication)
+
+- **GET** `/api/protected` — Protected route for any authenticated user
+- **GET** `/api/moderator` — Route for `moderator` or `admin`
+- **GET** `/api/admin` — Route for `admin` only
+
+---
+
+### User Profile Management
+
+- **GET** `/api/profile` — Get authenticated user's profile
+- **PUT** `/api/profile` — Update email and/or password  
+  **Body**:
+  ```json
+  {
+    "email": "new.email@example.com",
+    "password": "NewPassword1!"
+  }
+  ```
+
+---
+
+### User Management (Admin Only)
+
+- **PUT** `/api/users/:id/role` — Update user role  
+  **Body**:
+  ```json
+  {
+    "role": "moderator"
+  }
+  ```
+
+---
+
+## 🔒 Security Features
+
+- Passwords are hashed using bcrypt before storage
+- JWT tokens have expiration time (`1 hour`)
+- Role-based access control for route protection
+- Rate limiting on sensitive routes (`/api/register`, `/api/login`)
+- Secure error handling to avoid leaking server internals
+- Input validation for email format and strong password enforcement
+
+---
+
+## 🧪 Testing the API
+
+You can test using **Postman** or **cURL**.
+
+### Example cURL Commands
+
+- **Register a New User**
+  ```bash
+  curl -X POST http://localhost:3000/api/register \
+    -H "Content-Type: application/json" \
+    -d '{"username":"admin1","email":"admin@example.com","password":"Password1!","role":"admin"}'
+  ```
+
+- **Login**
+  ```bash
+  curl -X POST http://localhost:3000/api/login \
+    -H "Content-Type: application/json" \
+    -d '{"username":"admin1","password":"Password1!"}'
+  ```
+
+- **Access Protected Route**
+  ```bash
+  curl -X GET http://localhost:3000/api/protected \
+    -H "Authorization: Bearer YOUR_TOKEN_HERE"
+  ```
+
+- **Update User Role (Admin Only)**
+  ```bash
+  curl -X PUT http://localhost:3000/api/users/USER_ID/role \
+    -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{"role":"moderator"}'
+  ```
+
+---
+
+## 📂 Project Structure
+
+```
+/controllers
+  authController.js
+  userController.js
+/middlewares
+  authMiddleware.js
+  roleMiddleware.js
+/routes
+  authRoutes.js
+  userRoutes.js
+.env
+server.js
+package.json
+README.md
+```
+
+---
+
+
